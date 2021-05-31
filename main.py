@@ -14,18 +14,38 @@ clg_name = list()
 location = list()
 topic = list()
 last_date = list()
+bad_page_url = list()
 
 def nav_academicposition_pages(pageurls):
     url_count = 0
     for url in pageurls:
+        print(url)
         driver.get(url)
-        clg_name.append((driver.find_element_by_xpath('//a[@class = "job-employer-title"][1]')).text)
-        topic.append((driver.find_element_by_xpath('//h1[@class = "job-title"][1]')).text)
-        location.append((driver.find_element_by_xpath('//a[@class = "job-location"][1]')).text)
-        last_date.append((driver.find_element_by_xpath('//span[@class = "job-publishing-date"][1]')).text)
-        if last_date[url_count] == '':
-            last_date[url_count] = 'DATE Not FOUND'
+        try:
+            clg_name.append((driver.find_element_by_xpath('//a[@class = "job-employer-title"][1]')).text)
+            topic.append((driver.find_element_by_xpath('//h1[@class = "job-title"][1]')).text)
+            bad_page_url.append("")
+
+        
+            # if location class not fount at that path
+            try:
+                try:
+                    if ((driver.find_element_by_xpath('//span[@class = "job-publishing-date"][1]')).text) == "":
+                        last_date.append('DATE NOT FOUND')
+                    else:
+                        last_date.append((driver.find_element_by_xpath('//span[@class = "job-publishing-date"][1]')).text)
+                except:
+                    last_date.append('DATE NOT FOUND')
+                location.append((driver.find_element_by_xpath('//a[@class = "job-location"][1]')).text)
+            except:
+                location.append("LOCATION NOT FOUND")
+        except:
+            clg_name.append("NO NAME FOUND")
+            topic.append("NO TOPIC FOUND")
+            bad_page_url.append(url)
         url_count += 1
+        print("We just finished taking values from url: ",url_count)
+
     print("clgname: ",clg_name)
     print("topic: ",topic)
     print("location: ",location)
@@ -65,7 +85,6 @@ web_list = list()
 web_list = ["https://academicpositions.com/find-jobs/PhD-in-Chemistry-by-all-in-all/all/1"]
  
 for iter in web_list:
-    print("inside for")
     print(iter)
     driver.get(iter)
     if iter == "https://academicpositions.com/find-jobs/PhD-in-Chemistry-by-all-in-all/all/1":
