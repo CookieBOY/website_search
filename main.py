@@ -1,5 +1,6 @@
 import config as cfg
 import time
+import pandas as pd
 
 from selenium import webdriver
 
@@ -50,6 +51,14 @@ def nav_academicposition_pages(pageurls):
     print("topic: ",topic)
     print("location: ",location)
     print("last_date: ",last_date)
+    data_index = pd.DataFrame({'COLLEGE NAME': clg_name,
+                               'TOPIC': topic,
+                               'LOCATION': location,
+                               'LAST DATE': last_date,
+                               'BAD PAGES': bad_page_url})
+    writer = pd.ExcelWriter('CHEM_PHD.xlsx', engine='xlsxwiter')
+    data_index.to_excel(writer, sheet_name='ACADEMIC_POSITION', index=False)
+    writer.save()
     driver.close()
 
 
@@ -83,7 +92,7 @@ def academicposition():
 # add website names here
 web_list = list()
 web_list = ["https://academicpositions.com/find-jobs/PhD-in-Chemistry-by-all-in-all/all/1"]
- 
+
 for iter in web_list:
     print(iter)
     driver.get(iter)
